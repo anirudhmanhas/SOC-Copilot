@@ -1,0 +1,18 @@
+id: RULE-WEB-002
+name: Cross-Site Scripting (XSS) Attempt
+severity: HIGH
+source: web
+mitre_technique: T1190
+description: Incoming HTTP request contains Cross-Site Scripting (XSS) payload signatures such as script tags or javascript pseudoprotocol.
+detection:
+  type: pattern
+  field: src_ip
+  conditions:
+    event_type: http_request
+    regex_match: "(?i)(<script|javascript:|onerror\\s*=|onload\\s*=|alert\\s*\\(|document\\.cookie)"
+  count: 1
+  window_seconds: 60
+action_recommendations:
+  - action_type: block_ip
+    description: Apply web application firewall block on client IP
+

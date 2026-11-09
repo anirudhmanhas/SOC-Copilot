@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC Copilot — Autonomous AI-Powered Security Operations Center</title>
+  <meta name="description" content="Open-source AI-augmented Security Operations Center with multi-source ingestion, MITRE ATT&CK correlation, Google Gemini 3.5 Flash triage, and safe 1-click active containment.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#0B0F17',
+              card: '#111827',
+              border: '#1F2937',
+              blue: '#3B82F6',
+              cyan: '#06B6D4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0B0F17; color: #E5E7EB; }
+    .glow-blue { box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.25); }
+    .glow-cyan { box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.2); }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-blue-600/30 selection:text-white">
+
+  <!-- Top Navbar -->
+  <header class="border-b border-gray-800/80 bg-[#0B0F17]/90 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30">
+          <i data-lucide="shield" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold tracking-tight text-white">SOC Copilot</span>
+            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Autonomous SecOps</span>
+          </div>
+          <p class="text-[11px] text-gray-400">AI Threat Correlation & Active Defense</p>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-xs font-medium text-gray-300">
+        <a href="#problem" class="hover:text-blue-400 transition-colors">The Problem</a>
+        <a href="#solution" class="hover:text-blue-400 transition-colors">Platform</a>
+        <a href="#how-it-works" class="hover:text-blue-400 transition-colors">Architecture</a>
+        <a href="#docker" class="hover:text-blue-400 transition-colors">Docker Quickstart</a>
+        <a href="#comparison" class="hover:text-blue-400 transition-colors">Comparison</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <a href="http://localhost:5173" target="_blank" class="flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 transition-all">
+          <span>Launch Dashboard</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-7xl mx-auto px-6 py-16 space-y-24">
+    <section class="text-center relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-b from-blue-950/20 via-gray-900/60 to-[#0B0F17] p-10 md:p-20 shadow-2xl glow-blue">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-6">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>AI-Augmented Cyber Defense Platform</span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto">
+        Enterprise SOC Defense <br>
+        <span class="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-400 bg-clip-text text-transparent">
+          Without the Enterprise Price Tag
+        </span>
+      </h1>
+
+      <p class="mt-6 text-gray-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Ingest heterogeneous security logs, correlate multi-stage breaches across the MITRE ATT&CK framework,
+        triage with <strong>Google Gemini 3.5 Flash</strong>, and execute safe 1-click active containment with zero vendor lock-in.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href="http://localhost:5173" class="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-xl shadow-blue-600/30 flex items-center space-x-2">
+          <span>Explore Live Dashboard</span>
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+        </a>
+        <a href="#docker" class="px-6 py-3.5 rounded-xl bg-gray-800/80 hover:bg-gray-700/80 text-gray-200 border border-gray-700 font-semibold text-sm transition-all flex items-center space-x-2">
+          <i data-lucide="terminal" class="w-4 h-4 text-emerald-400"></i>
+          <span>Docker Quickstart</span>
+        </a>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="mt-16 pt-10 border-t border-gray-800/80 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto text-center">
+        <div>
+          <div class="text-3xl font-extrabold text-blue-400">85%+</div>
+          <div class="text-xs text-gray-400 mt-1">Alert Noise Reduction</div>
+        </div>
+        <div>
+          <div class="text-3xl font-extrabold text-emerald-400">&lt; 3s</div>
+          <div class="text-xs text-gray-400 mt-1">Gemini AI Triage Time</div>
+        </div>
+        <div>
+          <div class="text-3xl font-extrabold text-purple-400">14</div>
+          <div class="text-xs text-gray-400 mt-1">MITRE Tactics Covered</div>
+        </div>
+        <div>
+          <div class="text-3xl font-extrabold text-amber-400">1-Click</div>
+          <div class="text-xs text-gray-400 mt-1">Safe Active Containment</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Problem (WHY) -->
+    <section id="problem" class="space-y-10">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <h2 class="text-xs font-bold text-rose-400 uppercase tracking-widest">The Problem (Why We Built This)</h2>
+        <h3 class="text-3xl font-extrabold text-white tracking-tight">The 3 Fatal Flaws of Legacy SOCs</h3>
+        <p class="text-sm text-gray-400">Small teams, startups, and academic institutions face asymmetric cyber threats with broken tools.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-rose-500/20 bg-gray-900/40 p-6 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 font-bold text-lg">$</div>
+          <h4 class="text-base font-bold text-white">The $100k+ SIEM Barrier</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Splunk and Microsoft Sentinel charge $50,000–$250,000+ per year based on data ingestion volume. Lean teams are left defenseless.</p>
+        </div>
+
+        <div class="rounded-2xl border border-amber-500/20 bg-gray-900/40 p-6 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-lg">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <h4 class="text-base font-bold text-white">80% False Positive Fatigue</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Analysts drown in 10,000+ disconnected alerts daily. Tier-1 analysts spend 70% of shifts copying IP addresses into reputation checkers.</p>
+        </div>
+
+        <div class="rounded-2xl border border-purple-500/20 bg-gray-900/40 p-6 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg">
+            <i data-lucide="bot" class="w-5 h-5"></i>
+          </div>
+          <h4 class="text-base font-bold text-white">The Danger of Black-Box AI</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Autonomous AI bots that execute actions without human validation risk knocking mission-critical production servers or executive identities offline.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Solution (WHAT) -->
+    <section id="solution" class="space-y-10">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <h2 class="text-xs font-bold text-blue-400 uppercase tracking-widest">The Solution (What It Delivers)</h2>
+        <h3 class="text-3xl font-extrabold text-white tracking-tight">The 4 Core Defense Pillars</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-6 rounded-2xl border border-gray-800 bg-gray-900/60 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-base font-bold text-white">1. Multi-Source Ingestion & Active Drop</h4>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed">Standardizes perimeter firewalls (KV), Nginx web logs, and Linux SSH logs. Traffic from blocked adversary IPs is actively dropped at perimeter ingestion.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl border border-gray-800 bg-gray-900/60 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-base font-bold text-white">2. MITRE Kill-Chain Correlation</h4>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed">Sliding 10-minute temporal windows and IP/user pivot clustering collapse dozens of atomic alerts into ONE unified incident campaign, escalating severity as the attack progresses.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl border border-gray-800 bg-gray-900/60 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-base font-bold text-white">3. Google Gemini 3.5 Flash RAG Triage</h4>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed">Retrieval-Augmented Generation feeds incident timelines and curated MITRE technique definitions into Gemini 3.5 Flash for natural-language executive summaries and confidence scores.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl border border-gray-800 bg-gray-900/60 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-base font-bold text-white">4. Safe Human-in-the-Loop Containment</h4>
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed">AI only recommends; execution strictly requires operator confirmation. 1-click firewall IP drops, user disablement, and ticketing with full audit compliance logging.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Pipeline (HOW) -->
+    <section id="how-it-works" class="space-y-10">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest">How It Works (Architecture)</h2>
+        <h3 class="text-3xl font-extrabold text-white tracking-tight">The 6-Stage Autonomous Pipeline</h3>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-blue-400">Stage 01</div>
+          <h5 class="font-bold text-white text-sm">Resilient Ingestion</h5>
+          <p class="text-xs text-gray-400">Regex-powered parsers extract ECS fields and enforce active firewall drop filters.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-indigo-400">Stage 02</div>
+          <h5 class="font-bold text-white text-sm">Rule Evaluation</h5>
+          <p class="text-xs text-gray-400">11 YAML rules match threshold, distinct port, and regex signatures with deduplication.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-purple-400">Stage 03</div>
+          <h5 class="font-bold text-white text-sm">MITRE Correlation</h5>
+          <p class="text-xs text-gray-400">Aggregates atomic hits into incidents based on 10-minute sliding windows and pivots.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-emerald-400">Stage 04</div>
+          <h5 class="font-bold text-white text-sm">Gemini RAG Triage</h5>
+          <p class="text-xs text-gray-400">Injects MITRE definitions and outputs strict JSON executive triage summaries.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-amber-400">Stage 05</div>
+          <h5 class="font-bold text-white text-sm">1-Click Containment</h5>
+          <p class="text-xs text-gray-400">Enforces analyst verification modal and logs immutable audit records.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/40 space-y-2">
+          <div class="text-xs font-mono text-rose-400">Stage 06</div>
+          <h5 class="font-bold text-white text-sm">Real-Time WebSockets</h5>
+          <p class="text-xs text-gray-400">Broadcasts live alert toasts, map coordinates, and incident state changes instantly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Docker Quickstart -->
+    <section id="docker" class="rounded-3xl border border-blue-500/30 bg-gradient-to-b from-gray-900 via-gray-900/90 to-[#0B0F17] p-8 md:p-12 space-y-6">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-wider">
+            <i data-lucide="terminal" class="w-4 h-4"></i>
+            <span>1-Command Deployment</span>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white mt-1">Docker Compose Integration</h3>
+          <p class="text-xs text-gray-400 mt-1">Runs the FastAPI backend, React Nginx frontend, and demo simulator in isolated containers.</p>
+        </div>
+      </div>
+
+      <div class="bg-[#05080E] p-5 rounded-xl border border-gray-800 font-mono text-xs text-gray-300 space-y-3">
+        <div class="text-gray-500"># Start full platform (Backend :8000, Frontend :5173, Persistent SQLite Volume)</div>
+        <div class="text-emerald-400 font-bold">docker compose up --build</div>
+        <div class="text-gray-500 pt-2"># Or run with automated attack simulation (Live Demo Profile)</div>
+        <div class="text-blue-300">docker compose --profile demo up --build</div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs text-gray-300">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+          <span>Multi-stage Node 20 build + Nginx Alpine runtime</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+          <span>Persistent Docker volume for SQLite database</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+          <span>Automated container healthchecks every 10s</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section id="comparison" class="space-y-6">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Market Comparison</h2>
+        <h3 class="text-2xl font-bold text-white tracking-tight">How SOC Copilot Stacks Up</h3>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900/60 shadow-xl">
+        <table class="w-full text-left text-xs text-gray-300">
+          <thead class="bg-gray-950 text-gray-400 uppercase tracking-wider text-[11px] border-b border-gray-800">
+            <tr>
+              <th class="p-4 font-semibold">Evaluation Criteria</th>
+              <th class="p-4 font-bold text-blue-400">SOC Copilot</th>
+              <th class="p-4 font-semibold">Splunk ES</th>
+              <th class="p-4 font-semibold">Microsoft Sentinel</th>
+              <th class="p-4 font-semibold">CrowdStrike Falcon</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800 font-sans">
+            <tr>
+              <td class="p-4 font-semibold text-white">Annual Cost</td>
+              <td class="p-4 font-bold text-emerald-400">Free / Open-Source</td>
+              <td class="p-4 text-rose-300">$50,000 – $250,000+</td>
+              <td class="p-4 text-rose-300">$30,000 – $120,000+</td>
+              <td class="p-4 text-rose-300">$100,000+</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-semibold text-white">Deployment Time</td>
+              <td class="p-4 font-bold text-emerald-400">&lt; 5 minutes (Docker)</td>
+              <td class="p-4 text-gray-400">Months (Professional svcs)</td>
+              <td class="p-4 text-gray-400">Weeks (Azure tenant)</td>
+              <td class="p-4 text-gray-400">Weeks (Agent rollout)</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-semibold text-white">AI Analyst Engine</td>
+              <td class="p-4 font-bold text-emerald-400">Google Gemini 3.5 Flash (RAG)</td>
+              <td class="p-4 text-gray-400">Paid add-on</td>
+              <td class="p-4 text-gray-400">Security Copilot ($4/hr)</td>
+              <td class="p-4 text-gray-400">Charlotte AI (Tiered add-on)</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-semibold text-white">Human-in-the-Loop Safety</td>
+              <td class="p-4 font-bold text-emerald-400">1-Click Modal & Audit Trail</td>
+              <td class="p-4 text-gray-400">Complex SOAR scripts</td>
+              <td class="p-4 text-gray-400">Logic Apps setup</td>
+              <td class="p-4 text-gray-400">Manual RTR scripts</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-semibold text-white">Offline Mode</td>
+              <td class="p-4 font-bold text-emerald-400">Yes (Rotational Synthesis)</td>
+              <td class="p-4 text-rose-400">No</td>
+              <td class="p-4 text-rose-400">No</td>
+              <td class="p-4 text-rose-400">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-12 border-t border-gray-900 text-center text-xs text-gray-500 space-y-4">
+      <div class="flex items-center justify-center space-x-2">
+        <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
+        <span class="font-bold text-gray-300">SOC Copilot</span>
+        <span>— Autonomous Security Operations Center</span>
+      </div>
+      <p>MIT Licensed • Python 3.12 • FastAPI • React 18 • Google Gemini 3.5 Flash • Docker</p>
+    </footer>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+

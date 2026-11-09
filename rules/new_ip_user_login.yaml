@@ -1,0 +1,19 @@
+id: RULE-AUTH-004
+name: Anomalous Login from New IP for User
+severity: MEDIUM
+source: ssh
+mitre_technique: T1078
+description: Successful authentication for an account originating from a source IP address never previously associated with that user.
+detection:
+  type: pattern
+  field: user
+  conditions:
+    event_type: login_success
+    status: success
+    new_ip_for_user: true
+  count: 1
+  window_seconds: 86400
+action_recommendations:
+  - action_type: disable_user
+    description: Require MFA challenge and notify user of new location access
+

@@ -1,0 +1,19 @@
+id: RULE-NET-001
+name: Network Port Scan Reconnaissance
+severity: HIGH
+source: firewall
+mitre_technique: T1046
+description: Single source IP generating connection drops across 20 or more distinct destination ports within 60 seconds.
+detection:
+  type: threshold
+  field: src_ip
+  distinct_field: dst_port
+  conditions:
+    event_type: firewall_drop
+    status: blocked
+  count: 20
+  window_seconds: 60
+action_recommendations:
+  - action_type: block_ip
+    description: Add offending source IP to perimeter firewall blacklist
+

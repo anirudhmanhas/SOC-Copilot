@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: soc-copilot-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      - USE_MOCK_AI=${USE_MOCK_AI:-false}
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - DATABASE_URL=sqlite:///./soc_copilot.db
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:80,http://127.0.0.1:5173,http://127.0.0.1:80
+    volumes:
+      - soc-db-data:/app/backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: soc-copilot-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Optional automated attack simulator service
+  # Run with: docker compose --profile demo up
+  simulator:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: soc-copilot-simulator
+    profiles: ["simulator", "demo"]
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: [
+      "python", 
+      "/app/simulator/simulate.py", 
+      "--scenario", "full_attack_chain", 
+      "--speed", "3.0", 
+      "--target", "http://backend:8000/api/ingest"
+    ]
+    restart: "no"
+
+volumes:
+  soc-db-data:
+

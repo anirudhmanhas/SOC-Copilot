@@ -1,0 +1,18 @@
+id: RULE-WEB-003
+name: Web Directory & Path Scanning
+severity: MEDIUM
+source: web
+mitre_technique: T1595.002
+description: High volume of HTTP 404 Not Found responses from a single source IP indicating automated directory fuzzing.
+detection:
+  type: threshold
+  field: src_ip
+  conditions:
+    event_type: http_request
+    status_code: 404
+  count: 10
+  window_seconds: 60
+action_recommendations:
+  - action_type: block_ip
+    description: Rate limit or temporarily block probing IP at reverse proxy
+

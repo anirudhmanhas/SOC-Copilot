@@ -1,0 +1,18 @@
+id: RULE-NET-002
+name: Large Outbound Data Transfer
+severity: HIGH
+source: firewall
+mitre_technique: T1041
+description: Outbound connection session transferring large volume of data exceeding threshold (e.g. >= 50MB).
+detection:
+  type: threshold
+  field: dst_ip
+  conditions:
+    source: firewall
+    status: allowed
+    bytes_min: 50000000
+  count: 1
+  window_seconds: 300
+action_recommendations:
+  - action_type: block_ip
+    description: Terminate connection and apply outbound egress filtering on destination IP

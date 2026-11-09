@@ -1,0 +1,153 @@
+[
+  {
+    "id": "T1110",
+    "name": "Brute Force",
+    "tactic": "Credential Access",
+    "description": "Adversaries may use brute force techniques to attempt access to accounts when passwords or other credentials are unknown."
+  },
+  {
+    "id": "T1110.001",
+    "name": "Password Guessing",
+    "tactic": "Credential Access",
+    "description": "Adversaries may systematically guess passwords to obtain valid credentials for accounts on a target system."
+  },
+  {
+    "id": "T1110.003",
+    "name": "Password Spraying",
+    "tactic": "Credential Access",
+    "description": "Adversaries may attempt a small number of commonly used passwords against many accounts to avoid account lockouts."
+  },
+  {
+    "id": "T1190",
+    "name": "Exploit Public-Facing Application",
+    "tactic": "Initial Access",
+    "description": "Adversaries may attempt to exploit vulnerabilities in Internet-facing software (e.g., SQL injection, command injection) to gain access."
+  },
+  {
+    "id": "T1046",
+    "name": "Network Service Discovery",
+    "tactic": "Discovery",
+    "description": "Adversaries may attempt to discover active remote services and accessible open ports across network segments (port scanning)."
+  },
+  {
+    "id": "T1078",
+    "name": "Valid Accounts",
+    "tactic": "Defense Evasion",
+    "description": "Adversaries may obtain and abuse credentials of existing legitimate accounts to gain access and maintain persistence."
+  },
+  {
+    "id": "T1078.001",
+    "name": "Default Accounts",
+    "tactic": "Initial Access",
+    "description": "Adversaries may obtain and abuse default or factory-configured credentials on applications and network devices."
+  },
+  {
+    "id": "T1041",
+    "name": "Exfiltration Over C2 Channel",
+    "tactic": "Exfiltration",
+    "description": "Adversaries may steal and transmit sensitive data back to an external command and control server."
+  },
+  {
+    "id": "T1052",
+    "name": "Exfiltration Over Physical or High-Volume Medium",
+    "tactic": "Exfiltration",
+    "description": "Adversaries may exfiltrate bulk enterprise data through large outbound network streams or external channels."
+  },
+  {
+    "id": "T1020",
+    "name": "Automated Exfiltration",
+    "tactic": "Exfiltration",
+    "description": "Adversaries may use automated transfer scripts and agents to exfiltrate collected sensitive records."
+  },
+  {
+    "id": "T1059",
+    "name": "Command and Scripting Interpreter",
+    "tactic": "Execution",
+    "description": "Adversaries may abuse command and script interpreters (Bash, Python, PowerShell) to execute commands."
+  },
+  {
+    "id": "T1059.004",
+    "name": "Unix Shell",
+    "tactic": "Execution",
+    "description": "Adversaries may abuse Unix shell environments to execute arbitrary scripts and interactive commands."
+  },
+  {
+    "id": "T1136",
+    "name": "Create Account",
+    "tactic": "Persistence",
+    "description": "Adversaries may create an account on a system to maintain access to target resources."
+  },
+  {
+    "id": "T1068",
+    "name": "Exploitation for Privilege Escalation",
+    "tactic": "Privilege Escalation",
+    "description": "Adversaries may exploit software vulnerabilities in elevated processes or kernel routines to elevate privileges."
+  },
+  {
+    "id": "T1548.003",
+    "name": "Sudo and Sudo Caching",
+    "tactic": "Privilege Escalation",
+    "description": "Adversaries may abuse sudo permissions and caching mechanisms to run unauthorized commands with root privileges."
+  },
+  {
+    "id": "T1595",
+    "name": "Active Scanning",
+    "tactic": "Reconnaissance",
+    "description": "Adversaries may execute active reconnaissance scans to probe network services and perimeter defenses."
+  },
+  {
+    "id": "T1595.002",
+    "name": "Vulnerability Scanning",
+    "tactic": "Reconnaissance",
+    "description": "Adversaries may scan web applications and perimeter hosts using automated tools to identify unpatched flaws."
+  },
+  {
+    "id": "T1003",
+    "name": "OS Credential Dumping",
+    "tactic": "Credential Access",
+    "description": "Adversaries may dump credentials from the operating system security subsystems and memory."
+  },
+  {
+    "id": "T1082",
+    "name": "System Information Discovery",
+    "tactic": "Discovery",
+    "description": "Adversaries may attempt to get detailed information about the operating system and hardware configuration."
+  },
+  {
+    "id": "T1071",
+    "name": "Application Layer Protocol",
+    "tactic": "Command and Control",
+    "description": "Adversaries may communicate using standard application layer protocols (HTTP, HTTPS, DNS) to blend into legitimate traffic."
+  },
+  {
+    "id": "T1071.001",
+    "name": "Web Protocols",
+    "tactic": "Command and Control",
+    "description": "Adversaries may communicate using standard HTTP/HTTPS channels to control remote implants."
+  },
+  {
+    "id": "T1105",
+    "name": "Ingress Tool Transfer",
+    "tactic": "Command and Control",
+    "description": "Adversaries may transfer tools or files from an external system into a compromised network."
+  },
+  {
+    "id": "T1036",
+    "name": "Masquerading",
+    "tactic": "Defense Evasion",
+    "description": "Adversaries may disguise artifacts, files, or user agents to mimic legitimate software or users."
+  },
+  {
+    "id": "T1053",
+    "name": "Scheduled Task/Job",
+    "tactic": "Persistence",
+    "description": "Adversaries may abuse task scheduling mechanisms like cron to facilitate ongoing execution."
+  },
+  {
+    "id": "T1566",
+    "name": "Phishing",
+    "tactic": "Initial Access",
+    "description": "Adversaries may send spearphishing emails with malicious links or attachments to gain access."
+  }
+]
+

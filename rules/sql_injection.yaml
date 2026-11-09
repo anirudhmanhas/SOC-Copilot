@@ -1,0 +1,17 @@
+id: RULE-WEB-001
+name: SQL Injection Probe & Exploitation
+severity: CRITICAL
+source: web
+mitre_technique: T1190
+description: Incoming HTTP request contains known SQL injection signatures targeting public-facing web applications.
+detection:
+  type: pattern
+  field: src_ip
+  conditions:
+    event_type: http_request
+    regex_match: "(?i)(union\\s+select|'\\s+or\\s+'?1'?='?1|--|/\\*|information_schema|xp_cmdshell|sleep\\(\\s*\\d+\\s*\\))"
+  count: 1
+  window_seconds: 60
+action_recommendations:
+  - action_type: block_ip
+    description: Block attacking IP at WAF or reverse proxy level

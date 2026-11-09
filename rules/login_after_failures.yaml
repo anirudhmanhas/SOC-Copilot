@@ -1,0 +1,21 @@
+id: RULE-AUTH-003
+name: Successful Login After Multiple Failures
+severity: CRITICAL
+source: ssh
+mitre_technique: T1078
+description: Detects a successful authentication event following multiple prior failed login attempts from the same IP.
+detection:
+  type: sequence
+  field: src_ip
+  conditions:
+    prior_event_type: login_failed
+    prior_count: 5
+    trigger_event_type: login_success
+  count: 1
+  window_seconds: 300
+action_recommendations:
+  - action_type: block_ip
+    description: Terminate active SSH sessions and block source IP
+  - action_type: disable_user
+    description: Lock compromised account and invalidate active sessions
+

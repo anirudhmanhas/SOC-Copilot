@@ -1,0 +1,18 @@
+id: RULE-WEB-004
+name: Automated Vulnerability Scanner User-Agent
+severity: MEDIUM
+source: web
+mitre_technique: T1595
+description: HTTP request with a User-Agent associated with automated vulnerability scanners or attack tools (sqlmap, nikto, nmap, hydra).
+detection:
+  type: pattern
+  field: src_ip
+  conditions:
+    event_type: http_request
+    regex_match: "(?i)(sqlmap|nikto|nmap|masscan|hydra|acunetix|nessus|gobuster|dirbuster)"
+  count: 1
+  window_seconds: 60
+action_recommendations:
+  - action_type: block_ip
+    description: Block automated scanner traffic at WAF
+

@@ -1,0 +1,16 @@
+id: RULE-PRIV-001
+name: Unauthorized Sudo & Privilege Escalation
+severity: HIGH
+source: ssh
+mitre_technique: T1548.003
+description: Non-root user attempted unauthorized execution of administrative binaries via sudo.
+detection:
+  type: pattern
+  field: user
+  conditions:
+    event_type: sudo_failure
+  count: 1
+  window_seconds: 60
+action_recommendations:
+  - action_type: disable_user
+    description: Suspend user credentials pending security review

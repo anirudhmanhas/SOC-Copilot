@@ -1,0 +1,20 @@
+id: RULE-SSH-001
+name: SSH Brute Force Attack
+severity: HIGH
+source: ssh
+mitre_technique: T1110.001
+description: Detects multiple failed SSH authentication attempts from a single source IP within a 2-minute window.
+detection:
+  type: threshold
+  field: src_ip
+  conditions:
+    event_type: login_failed
+    status: failed
+  count: 10
+  window_seconds: 120
+action_recommendations:
+  - action_type: block_ip
+    description: Add source IP to host firewall drop list
+  - action_type: disable_user
+    description: Lock targeted user account if authentication succeeded
+
