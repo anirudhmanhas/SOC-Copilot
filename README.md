@@ -90,8 +90,8 @@ flowchart TD
     subgraph Normalization ["2. Parsing & Active Filter"]
         Ingest --> Parse["Resilient Regex Parsers<br/>(parsers.py)"]
         Parse --> Filter{"Is Source IP<br/>in Firewall Blocklist?"}
-        Filter -- Yes --> Drop["Drop & Flag Traffic<br/>(Active Containment)"]
-        Filter -- No --> DB_Log[("LogEvent Table<br/>(SQLite/PostgreSQL)")]
+        Filter -->|Yes| Drop["Drop & Flag Traffic<br/>(Active Containment)"]
+        Filter -->|No| DB_Log[("LogEvent Table<br/>(SQLite/PostgreSQL)")]
     end
 
     subgraph Detection ["3. Rule Detection Engine"]
@@ -104,13 +104,13 @@ flowchart TD
     subgraph Correlation ["4. Incident Correlation Engine"]
         Alerts --> Correlate["10-Min Sliding Temporal Window<br/>(correlation.py)"]
         Correlate --> Pivot["Pivot Clustering<br/>(src_ip & Target User)"]
-        Pivot --> KillChain["MITRE Kill-Chain Progression<br/>Recon → Access → Exfil"]
+        Pivot --> KillChain["MITRE Kill-Chain Progression<br/>(Recon to Access to Exfil)"]
         KillChain --> Incident[("Correlated Incidents Table<br/>(Auto Severity Escalation)")]
     end
 
     subgraph AI_Triage ["5. Google Gemini AI Analyst (RAG)"]
-        Incident --> AutoCheck{"Severity ≥ High?"}
-        AutoCheck -- Yes --> RAG["RAG Retrieval Engine<br/>(ai_triage.py)"]
+        Incident --> AutoCheck{"Severity is High or Critical?"}
+        AutoCheck -->|Yes| RAG["RAG Retrieval Engine<br/>(ai_triage.py)"]
         RAG --> Context["MITRE Technique Descriptions<br/>+ Attack Timeline Context"]
         Context --> Gemini["Google Gemini 3.5 Flash API<br/>(Strict JSON Output)"]
         Gemini --> Summary["Executive Summary<br/>Attacker Goal & Confidence<br/>Recommended Actions"]
@@ -118,8 +118,8 @@ flowchart TD
     end
 
     subgraph Response ["6. Safe Active Containment"]
-        Analyst(("Human SOC Analyst<br/>(Tier 1/2) ")) -. Reviews .-> Summary
-        Analyst == 1-Click Approval ==> Modal["Action Confirmation Modal<br/>(Target, Analyst ID, Justification)"]
+        Analyst(("Human SOC Analyst (Tier 1/2)")) -.->|Reviews| Summary
+        Analyst ==>|1-Click Approval| Modal["Action Confirmation Modal<br/>(Target, Analyst ID, Justification)"]
         Modal --> ActBlock["Block IP (Perimeter Firewall)"]
         Modal --> ActUser["Disable User (Active Directory/IdP)"]
         Modal --> ActTicket["Create Incident Ticket (SecOps)"]
@@ -131,10 +131,10 @@ flowchart TD
     end
 
     subgraph RealTime ["7. Real-Time Dashboard"]
-        Alerts -. WebSocket Event .-> WS["Thread-Safe Broadcaster<br/>(/ws)"]
-        Incident -. WebSocket Event .-> WS
-        Contained -. WebSocket Event .-> WS
-        WS --> UI["React 18 + Tailwind Dashboard<br/>- Global Attack Map (Leaflet)<br/>- Live Alerts Stream & Toast<br/>- Kill-Chain Timeline<br/>- MITRE ATT&CK Matrix"]
+        Alerts -.->|WebSocket Event| WS["Thread-Safe Broadcaster (/ws)"]
+        Incident -.->|WebSocket Event| WS
+        Contained -.->|WebSocket Event| WS
+        WS --> UI["React 18 + Tailwind Dashboard<br/>(Attack Map, Live Feed, MITRE Matrix)"]
     end
 ```
 
@@ -431,42 +431,42 @@ Click the **"Simulate Attack"** button in the dashboard top navigation bar and s
 ### 1. Operations Overview & Tactical Threat Map
 *Live KPI cards, velocity chart, Recharts severity distribution, and real-time Leaflet threat vector tracking with dark tactical styling.*
 
-![Overview Dashboard](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/1_overview_dashboard.png)
+![Overview Dashboard](docs/screenshots/1_overview_dashboard.png)
 
 ---
 
 ### 2. Correlated Incidents Hub
 *71 atomic telemetry logs grouped into **exactly ONE critical multi-stage incident** based on temporal windows and IP clustering.*
 
-![Incidents Hub](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/2_incidents_page.png)
+![Incidents Hub](docs/screenshots/2_incidents_page.png)
 
 ---
 
 ### 3. Incident Drill-Down & AI Analyst Triage
 *Chronological kill-chain attack timeline side-by-side with Google Gemini executive summary, confidence score, and targeted containment recommendations.*
 
-![Incident Detail](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/3_incident_detail_before_action.png)
+![Incident Detail](docs/screenshots/3_incident_detail_before_action.png)
 
 ---
 
 ### 4. Safe Human-in-the-Loop Containment Modal
 *Operator confirmation modal prompting for analyst identity and operational justification before executing perimeter firewall drop rules.*
 
-![Containment Modal](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/4_action_confirmation_modal.png)
+![Containment Modal](docs/screenshots/4_action_confirmation_modal.png)
 
 ---
 
 ### 5. Contained Incident & Threat Map Update
 *Incident transitions to **`contained`**; active threat markers turn gray; subsequent packets from adversary IP `185.220.101.5` are automatically dropped at ingestion.*
 
-![Incident Contained](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/5_incident_detail_contained.png)
+![Incident Contained](docs/screenshots/5_incident_detail_contained.png)
 
 ---
 
 ### 6. Response Center & Audit Log
 *Verified active firewall blocks, disabled accounts, escalation tickets, and timestamped audit logs for compliance.*
 
-![Response Center](C:/Users/aniru/.gemini/antigravity/brain/fa23ba99-5f8c-4b62-93b0-a77fb3dd144e/6_response_center.png)
+![Response Center](docs/screenshots/6_response_center.png)
 
 ---
 
