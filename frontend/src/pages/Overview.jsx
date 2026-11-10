@@ -23,16 +23,75 @@ import {
   Cell,
   BarChart,
   Bar,
+  Sector,
 } from "recharts"
 import { api } from "../api"
 import AttackMap from "../components/AttackMap"
 import LiveAlertsFeed from "../components/LiveAlertsFeed"
 
 const SEVERITY_COLORS = {
-  critical: "#EF4444",
+  critical: "#F43F5E",
   high: "#F59E0B",
-  medium: "#3B82F6",
-  low: "#10B981",
+  medium: "#38BDF8",
+  low: "#34D399",
+}
+
+// Active hover shape renderer for Recharts Donut Chart
+const renderActiveDonutShape = (props) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props
+  return (
+    <g>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius - 2}
+        outerRadius={outerRadius + 7}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+        stroke="#FFFFFF"
+        strokeWidth={2}
+        style={{
+          filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.45))",
+          transition: "all 0.2s ease-out",
+          cursor: "pointer",
+        }}
+      />
+    </g>
+  )
+}
+
+// High-contrast, visible tooltip when hovering over severity segments
+const SeverityDonutTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0]
+    const itemColor = data.payload?.color || data.color || "#38BDF8"
+    const val = data.value ?? 0
+    return (
+      <div className="bg-gray-950/95 backdrop-blur-md border border-gray-700/80 px-3.5 py-2 rounded-lg shadow-2xl text-xs z-50 pointer-events-none ring-1 ring-white/10">
+        <div className="flex items-center space-x-2">
+          <span
+            className="w-2.5 h-2.5 rounded-full ring-2 ring-white/40 shadow-sm"
+            style={{ backgroundColor: itemColor }}
+          />
+          <span className="font-bold text-white tracking-wide uppercase text-[11px]">
+            {data.name} Severity
+          </span>
+          <span
+            className="px-2 py-0.5 rounded text-[11px] font-bold font-mono ml-2 border"
+            style={{
+              backgroundColor: `${itemColor}25`,
+              color: itemColor,
+              borderColor: `${itemColor}50`,
+            }}
+          >
+            {val} {val === 1 ? "alert" : "alerts"}
+          </span>
+        </div>
+      </div>
+    )
+  }
+  return null
 }
 
 export default function Overview() {
@@ -42,6 +101,7 @@ export default function Overview() {
   const [incidents, setIncidents] = useState([])
   const [blockedIps, setBlockedIps] = useState([])
   const [refreshing, setRefreshing] = useState(false)
+  const [activeDonutIndex, setActiveDonutIndex] = useState(null)
 
   const fetchData = async () => {
     try {
@@ -315,11 +375,15 @@ export default function Overview() {
                 <YAxis stroke="#6B7280" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#111827",
+                    backgroundColor: "#0B0F17",
                     borderColor: "#374151",
                     borderRadius: "8px",
                     fontSize: "12px",
+                    color: "#F8FAFC",
+                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
                   }}
+                  itemStyle={{ color: "#38BDF8", fontWeight: 600 }}
+                  labelStyle={{ color: "#94A3B8", fontWeight: 500 }}
                 />
                 <Area
                   type="monotone"
@@ -351,40 +415,43 @@ export default function Overview() {
                   outerRadius={75}
                   paddingAngle={4}
                   dataKey="value"
+                  activeIndex={activeDonutIndex}
+                  activeShape={renderActiveDonutShape}
+                  onMouseEnter={(_, index) => setActiveDonutIndex(index)}
+                  onMouseLeave={() => setActiveDonutIndex(null)}
                 >
                   {chartDonutData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      stroke={activeDonutIndex === index ? "#FFFFFF" : "#111827"}
+                      strokeWidth={activeDonutIndex === index ? 2 : 1}
+                      style={{ cursor: "pointer", outline: "none" }}
+                    />
                   ))}
                 </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#111827",
-                    borderColor: "#374151",
-                    borderRadius: "8px",
-                    fontSize: "12px",
-                  }}
-                />
+                <Tooltip content={<SeverityDonutTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-gray-800/80 text-xs">
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.critical }} />
               <span className="text-gray-400">Critical:</span>
               <span className="font-semibold text-white">{severityCounts.critical}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.high }} />
               <span className="text-gray-400">High:</span>
               <span className="font-semibold text-white">{severityCounts.high}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.medium }} />
               <span className="text-gray-400">Medium:</span>
               <span className="font-semibold text-white">{severityCounts.medium}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SEVERITY_COLORS.low }} />
               <span className="text-gray-400">Low:</span>
               <span className="font-semibold text-white">{severityCounts.low}</span>
             </div>
@@ -406,11 +473,15 @@ export default function Overview() {
                 <YAxis dataKey="ip" type="category" stroke="#9CA3AF" fontSize={11} tickLine={false} width={90} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#111827",
+                    backgroundColor: "#0B0F17",
                     borderColor: "#374151",
                     borderRadius: "8px",
                     fontSize: "12px",
+                    color: "#F8FAFC",
+                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
                   }}
+                  itemStyle={{ color: "#F43F5E", fontWeight: 600 }}
+                  labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
                 />
                 <Bar dataKey="count" fill="#F43F5E" radius={[0, 4, 4, 0]} barSize={16} />
               </BarChart>

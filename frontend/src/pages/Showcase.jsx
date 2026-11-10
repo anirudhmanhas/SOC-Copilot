@@ -75,7 +75,7 @@ export default function Showcase() {
           </Link>
 
           <a
-            href="https://github.com"
+            href="https://github.com/anirudhmanhas/SOC-Copilot.git"
             target="_blank"
             rel="noreferrer"
             className="flex items-center space-x-2 px-5 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-800 text-sm font-medium transition-colors"
@@ -307,7 +307,7 @@ export default function Showcase() {
         {/* Code Box */}
         <div className="bg-[#05080E] p-4 rounded-xl border border-gray-800 font-mono text-xs text-gray-300 overflow-x-auto space-y-2">
           <div className="text-gray-500"># 1. Clone the repository</div>
-          <div className="text-blue-300">git clone https://github.com/your-org/soc-copilot.git && cd soc-copilot</div>
+          <div className="text-blue-300">git clone https://github.com/anirudhmanhas/SOC-Copilot.git && cd SOC-Copilot</div>
           <div className="text-gray-500 pt-2"># 2. Start full production stack via Docker Compose</div>
           <div className="text-emerald-400 font-bold">docker compose up --build</div>
           <div className="text-gray-500 pt-2"># 3. Access dashboard at http://localhost:5173</div>

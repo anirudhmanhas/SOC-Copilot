@@ -109,3 +109,9 @@ temp/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# --- Presentation & Demo Materials ---
+DEMO_SCRIPT.md
+PRESENTATION_SLIDES.md
+demo_script.md
+presentation_slides.md
